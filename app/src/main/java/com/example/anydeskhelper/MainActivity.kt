@@ -162,7 +162,7 @@ fun InstallButton(context: Context, label: String, url: String, onClick: () -> U
 fun ConfirmationDialog(message: String, onConfirm: () -> Unit, onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = { onDismiss() },
-        title = { Text("Confirmação!", fontWeight = FontWeight.Bold) },
+        title = { Text("Confirmação", fontWeight = FontWeight.Bold) },
         text = { Text(message) },
         confirmButton = {
             Button(onClick = { onConfirm() }) {
@@ -206,6 +206,22 @@ fun InstructionsScreen(context: Context, onActionComplete: () -> Unit) {
 
         Button(
             onClick = {
+                openAnyDeskApp(context)
+            },
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+        ) {
+            Text(
+                text = "Abrir AnyDesk",
+                color = Color.White,
+                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = {
                 openAccessibilitySettings(context)
                 onActionComplete() // Aciona a confirmação AD1 após abrir a acessibilidade
             },
@@ -218,6 +234,26 @@ fun InstructionsScreen(context: Context, onActionComplete: () -> Unit) {
                 style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
             )
         }
+    }
+}
+
+private fun openAnyDeskApp(context: Context) {
+    try {
+        // Tentando abrir o AnyDesk diretamente se ele estiver instalado
+        val intent = context.packageManager.getLaunchIntentForPackage("com.anydesk.anydeskandroid")
+        intent?.let {
+            it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(it)
+        }
+
+        // Agora, tentando abrir as configurações internas do AnyDesk, caso suportado
+        val settingsIntent = Intent(Intent.ACTION_VIEW, Uri.parse("anydesk://settings"))
+        settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        context.startActivity(settingsIntent)
+    } catch (e: Exception) {
+        // Caso ocorra algum erro, abrir a Play Store
+        val playStoreIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=com.anydesk.anydeskandroid"))
+        context.startActivity(playStoreIntent)
     }
 }
 
