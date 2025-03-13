@@ -162,7 +162,7 @@ fun InstallButton(context: Context, label: String, url: String, onClick: () -> U
 fun ConfirmationDialog(message: String, onConfirm: () -> Unit, onDismiss: () -> Unit) {
     AlertDialog(
         onDismissRequest = { onDismiss() },
-        title = { Text("Confirmação", fontWeight = FontWeight.Bold) },
+        title = { Text("Confirmação!", fontWeight = FontWeight.Bold) },
         text = { Text(message) },
         confirmButton = {
             Button(onClick = { onConfirm() }) {
