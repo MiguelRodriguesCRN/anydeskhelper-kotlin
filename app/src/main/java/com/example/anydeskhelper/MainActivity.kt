@@ -69,6 +69,7 @@ fun MainScreen() {
     var showInstructions by remember { mutableStateOf(false) }
     var showAnyDeskDialog by remember { mutableStateOf(false) }
     var showAnyDeskAd1Dialog by remember { mutableStateOf(false) }
+    var showAD1ConfirmationDialog by remember { mutableStateOf(false) } // Controle para o diálogo de confirmação AD1
 
     Column(
         modifier = Modifier
@@ -90,7 +91,7 @@ fun MainScreen() {
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        // Cards with elevated buttons
+        // Cards com botões elevados
         Card(
             modifier = Modifier
                 .fillMaxWidth()
@@ -114,17 +115,25 @@ fun MainScreen() {
         }
 
         if (showInstructions) {
-            InstructionsScreen(context)
+            InstructionsScreen(context) { showAD1ConfirmationDialog = true }
         }
 
         Spacer(modifier = Modifier.weight(1f))
     }
 
+    // Diálogos de confirmação de instalação
     if (showAnyDeskDialog) {
         ConfirmationDialog("Você instalou o AnyDesk?", { anyDeskInstalled = true; showAnyDeskDialog = false }) { showAnyDeskDialog = false }
     }
     if (showAnyDeskAd1Dialog) {
         ConfirmationDialog("Você instalou o AnyDesk AD1?", { anyDeskAd1Installed = true; showAnyDeskAd1Dialog = false }) { showAnyDeskAd1Dialog = false }
+    }
+
+    // Diálogo de confirmação AD1
+    if (showAD1ConfirmationDialog) {
+        ConfirmationDialog("Você ativou o AnyDesk AD1 nas configurações de acessibilidade?", { showAD1ConfirmationDialog = false }) {
+            showAD1ConfirmationDialog = false
+        }
     }
 }
 
@@ -170,7 +179,7 @@ fun ConfirmationDialog(message: String, onConfirm: () -> Unit, onDismiss: () -> 
 }
 
 @Composable
-fun InstructionsScreen(context: Context) {
+fun InstructionsScreen(context: Context, onActionComplete: () -> Unit) {
     Column(modifier = Modifier.padding(16.dp)) {
         Text(
             text = "Para ativar o AnyDesk AD1: ",
@@ -196,7 +205,10 @@ fun InstructionsScreen(context: Context) {
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = { openAccessibilitySettings(context) },
+            onClick = {
+                openAccessibilitySettings(context)
+                onActionComplete() // Aciona a confirmação AD1 após abrir a acessibilidade
+            },
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
         ) {
