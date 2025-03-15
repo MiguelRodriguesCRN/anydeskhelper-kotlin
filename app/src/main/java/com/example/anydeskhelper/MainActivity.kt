@@ -70,6 +70,7 @@ fun MainScreen() {
     var showAnyDeskDialog by remember { mutableStateOf(false) }
     var showAnyDeskAd1Dialog by remember { mutableStateOf(false) }
     var showAD1ConfirmationDialog by remember { mutableStateOf(false) } // Controle para o diálogo de confirmação AD1
+    var showSplashScreen by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -85,7 +86,7 @@ fun MainScreen() {
         )
 
         Text(
-            text = "Bem-vindo ao assistente de instalação do AnyDesk.",
+            text = "Bem-vindo ao assistente de instalação e configuração do AnyDesk.",
             style = MaterialTheme.typography.bodyLarge.copy(fontSize = 18.sp),
             color = Color.Gray,
             modifier = Modifier.padding(bottom = 16.dp)
@@ -134,6 +135,33 @@ fun MainScreen() {
         ConfirmationDialog("Você ativou o AnyDesk AD1 nas configurações de acessibilidade?", { showAD1ConfirmationDialog = false }) {
             showAD1ConfirmationDialog = false
         }
+    }
+
+    // Botão para reiniciar a configuração
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.BottomCenter
+    ) {
+        Button(
+            onClick = { showSplashScreen = true },
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth()
+                .height(48.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Text(
+                text = "Reiniciar Configuração",
+                color = Color.White,
+                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
+            )
+        }
+    }
+
+    if (showSplashScreen) {
+        SplashScreen() // Retorna para a tela inicial
     }
 }
 
@@ -206,22 +234,6 @@ fun InstructionsScreen(context: Context, onActionComplete: () -> Unit) {
 
         Button(
             onClick = {
-                openAnyDeskApp(context)
-            },
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
-        ) {
-            Text(
-                text = "Abrir AnyDesk",
-                color = Color.White,
-                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
-            )
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = {
                 openAccessibilitySettings(context)
                 onActionComplete() // Aciona a confirmação AD1 após abrir a acessibilidade
             },
@@ -234,6 +246,46 @@ fun InstructionsScreen(context: Context, onActionComplete: () -> Unit) {
                 style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
             )
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Text(
+            text = "Para autorizar o AD1: ",
+            style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
+            color = Color.Red
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+
+        val steps1 = listOf(
+            "1. Clique nos três traços no canto superior esquerdo.",
+            "2. Clique em Configurações, que estará com o nome em vermelho.",
+            "3. Encontre a seção de AD1 e clique em \"Autorizar\".",
+            "4. Após aparecer um símbolo de check, reinicie o aparelho.",
+            "5. Após a reinicialização, informe o número de acesso novamente para o agente de atendimento.",
+            "1 OBS: Se o nome \"Configurações\" não estiver em vermelho, seu AnyDesk está desatualizado.",
+            "2 OBS: Se não houver a opção \"Autorizar\", significa que a etapa anterior não foi realizada corretamente."
+        )
+
+        steps1.forEach { step ->
+            Text(text = step, style = MaterialTheme.typography.bodyMedium.copy(color = Color.Gray))
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = {
+                openAnyDeskApp(context)
+            },
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+        ) {
+            Text(
+                text = "Abrir AnyDesk",
+                color = Color.White,
+                style = MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
+            )
+        }
+
     }
 }
 
@@ -247,7 +299,7 @@ private fun openAnyDeskApp(context: Context) {
         }
 
         // Agora, tentando abrir as configurações internas do AnyDesk, caso suportado
-        val settingsIntent = Intent(Intent.ACTION_VIEW, Uri.parse("anydesk://settings"))
+        val settingsIntent = Intent(Intent.ACTION_VIEW, Uri.parse("settings"))
         settingsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(settingsIntent)
     } catch (e: Exception) {
