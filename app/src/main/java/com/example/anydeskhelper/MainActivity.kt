@@ -217,13 +217,7 @@ fun InstructionsScreen(context: Context, onActionComplete: () -> Unit) {
         Spacer(modifier = Modifier.height(8.dp))
 
         val steps = listOf(
-            "1. Ative o AnyDesk AD1.",
-            "2. Abra o AnyDesk.",
-            "3. Clique nos 3 pontinhos no canto superior esquerdo.",
-            "4. Vá em Configurações (que estará em vermelho).",
-            "5. Autorize o Plugin AD1.",
-            "6. Reinicie o dispositivo.",
-            "7. Após a reinicialização, informe o número do AnyDesk ao agente."
+            "Vá em Configurações >> Acessibilidade > Aplicativos Instalados >> Ative o AD1 (PERMITIR TODAS AS SOLICITAÇÕES)"
         )
 
         steps.forEach { step ->
@@ -257,13 +251,11 @@ fun InstructionsScreen(context: Context, onActionComplete: () -> Unit) {
         Spacer(modifier = Modifier.height(8.dp))
 
         val steps1 = listOf(
-            "1. Clique nos três traços no canto superior esquerdo.",
-            "2. Clique em Configurações, que estará com o nome em vermelho.",
-            "3. Encontre a seção de AD1 e clique em \"Autorizar\".",
-            "4. Após aparecer um símbolo de check, reinicie o aparelho.",
-            "5. Após a reinicialização, informe o número de acesso novamente para o agente de atendimento.",
-            "1 OBS: Se o nome \"Configurações\" não estiver em vermelho, seu AnyDesk está desatualizado.",
-            "2 OBS: Se não houver a opção \"Autorizar\", significa que a etapa anterior não foi realizada corretamente."
+            "1. Clica nos 3 Traços do Lado Esquerdo ao lado do Nome Anydesk, e em seguida clica no mome Configuração em Vermelho",
+            "2. Desça um pouco a tela, clique no botão \"Autorizar\" e, em seguida, selecione a opção \"Concordo\".",
+            "3. Volte a Tela Inicial",
+            "4. Clique em \"Inicar agora\"",
+            "5. clica nos 3 Pontinhos do Lado Direito, em seguida clica no nome Permissões, Clica em \"Perfil de permissão\" e clica em Acesso Integral e pode clicar em fechar,"
         )
 
         steps1.forEach { step ->
